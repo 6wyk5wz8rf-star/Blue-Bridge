@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f0e7">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="A calm home for BSL Learner Companion, Maths Modelling Studio and Maths Web.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Blue Bridge">
+  <title>Blue Bridge</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2333483f'/%3E%3Cpath d='M18 20h12c5 0 8 3 8 8v18H26c-5 0-8-3-8-8V20Zm28 0h-8c-5 0-8 3-8 8v18h8c5 0 8-3 8-8V20Z' fill='%23f4f0e7'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --paper: #f4f0e7;
+      --paper-deep: #e8e1d4;
+      --surface: #fbf9f4;
+      --surface-raised: #fffdf8;
+      --ink: #24312d;
+      --ink-soft: #627069;
+      --line: #d8d0c2;
+      --line-strong: #bdb4a5;
+      --nav: #31463e;
+      --nav-ink: #f6f2e8;
+      --focus: #2e6f67;
+      --shadow: 0 14px 40px rgba(42, 47, 43, .08), 0 2px 8px rgba(42, 47, 43, .05);
+      --shadow-small: 0 6px 18px rgba(42, 47, 43, .07);
+      --radius-xl: 28px;
+      --radius-lg: 21px;
+      --radius-md: 14px;
+      --ease: cubic-bezier(.2, .75, .25, 1);
+    }
+
+    html[data-theme="dark"] {
+      --paper: #171d1b;
+      --paper-deep: #202825;
+      --surface: #202724;
+      --surface-raised: #252e2a;
+      --ink: #edf0ea;
+      --ink-soft: #a9b3ad;
+      --line: #37423e;
+      --line-strong: #4e5c56;
+      --nav: #101513;
+      --nav-ink: #f1eee6;
+      --focus: #80bdb4;
+      --shadow: 0 16px 44px rgba(0, 0, 0, .25), 0 2px 8px rgba(0, 0, 0, .18);
+      --shadow-small: 0 7px 20px rgba(0, 0, 0, .18);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme]) {
+        --paper: #171d1b;
+        --paper-deep: #202825;
+        --surface: #202724;
+        --surface-raised: #252e2a;
+        --ink: #edf0ea;
+        --ink-soft: #a9b3ad;
+        --line: #37423e;
+        --line-strong: #4e5c56;
+        --nav: #101513;
+        --nav-ink: #f1eee6;
+        --focus: #80bdb4;
+        --shadow: 0 16px 44px rgba(0, 0, 0, .25), 0 2px 8px rgba(0, 0, 0, .18);
+        --shadow-small: 0 7px 20px rgba(0, 0, 0, .18);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      background:
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(70, 80, 74, .025) calc(100% - 1px)) 0 0 / 24px 24px,
+        var(--paper);
+    }
+
+    button, a, input { font: inherit; }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    button { color: inherit; }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 12px;
+      z-index: 1000;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--ink);
+      color: var(--surface);
+      transform: translateY(-150%);
+      transition: transform .18s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 218px minmax(0, 1fr);
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-self: start;
+      height: 100vh;
+      height: 100dvh;
+      padding: max(24px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
+      overflow: auto;
+      background: var(--nav);
+      color: var(--nav-ink);
+      border-right: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      padding: 4px 7px 25px;
+    }
+
+    .brand-mark {
+      display: grid;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .17);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .brand-mark svg { width: 25px; height: 25px; }
+
+    .brand-text { min-width: 0; }
+
+    .brand-kicker {
+      display: block;
+      margin-bottom: 2px;
+      color: rgba(255, 255, 255, .58);
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .brand-name {
+      display: block;
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.08;
+      text-overflow: ellipsis;
+    }
+
+    .primary-nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      background: transparent;
+      color: rgba(255, 255, 255, .72);
+      cursor: pointer;
+      text-align: left;
+      transition: background .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
+    }
+
+    .nav-button svg { width: 20px; height: 20px; flex: 0 0 20px; }
+
+    .nav-button:hover { color: #fff; background: rgba(255, 255, 255, .07); }
+
+    .nav-button[aria-current="page"] {
+      border-color: rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .11);
+      color: #fff;
+      box-shadow: inset 3px 0 0 #d7b982;
+    }
+
+    .side-note {
+      margin-top: auto;
+      padding: 18px 11px 0;
+      color: rgba(255, 255, 255, .48);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .84rem;
+      line-height: 1.48;
+    }
+
+    .main {
+      width: 100%;
+      min-width: 0;
+      max-width: 1500px;
+      margin-inline: auto;
+      padding: max(33px, env(safe-area-inset-top)) clamp(26px, 4.8vw, 76px) max(54px, env(safe-area-inset-bottom));
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: 30px;
+      margin-bottom: 28px;
+    }
+
+    .today {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink-soft);
+      font-size: .84rem;
+      font-weight: 680;
+      letter-spacing: .015em;
+    }
+
+    .today svg { width: 17px; height: 17px; }
+
+    .page { display: none; animation: page-in .32s var(--ease) both; }
+
+    .page.is-active { display: block; }
+
+    @keyframes page-in {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 28px;
+      margin-bottom: clamp(25px, 3.5vw, 42px);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #8a6e45;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      margin: 0;
+      max-width: 820px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.45rem, 5.6vw, 5.35rem);
+      font-weight: 500;
+      letter-spacing: -.048em;
+      line-height: .98;
+    }
+
+    .greeting {
+      max-width: 330px;
+      margin: 0 0 5px;
+      color: var(--ink-soft);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1rem, 1.35vw, 1.18rem);
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .app-shelf {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .app-entry {
+      --app-accent: #4d766f;
+      position: relative;
+      display: grid;
+      min-width: 0;
+      min-height: 236px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow-small);
+      isolation: isolate;
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
+    }
+
+    .app-entry:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--app-accent) 42%, var(--line));
+      box-shadow: var(--shadow);
+    }
+
+    .app-entry::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      z-index: 2;
+      width: 5px;
+      background: var(--app-accent);
+    }
+
+    .app-entry[data-app="bsl"] {
+      grid-column: span 5;
+      grid-template-rows: auto 1fr;
+    }
+
+    .app-entry[data-app="studio"] {
+      grid-column: span 7;
+      grid-template-columns: minmax(0, 1.25fr) minmax(190px, .75fr);
+    }
+
+    .app-entry[data-app="maths-web"] {
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr);
+      min-height: 204px;
+    }
+
+    .entry-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: clamp(22px, 3vw, 34px);
+    }
+
+    .entry-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 17px;
+    }
+
+    .room-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--app-accent);
+      font-size: .7rem;
+      font-weight: 830;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .room-label::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      border-radius: 4px;
+      background: currentColor;
+    }
+
+    .favourite-button {
+      display: grid;
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface-raised);
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: color .18s ease, background .18s ease, transform .18s var(--ease), border-color .18s ease;
+    }
+
+    .favourite-button:hover { transform: rotate(-5deg); color: var(--app-accent); }
+
+    .favourite-button[aria-pressed="true"] {
+      border-color: color-mix(in srgb, var(--app-accent) 40%, var(--line));
+      background: color-mix(in srgb, var(--app-accent) 12%, var(--surface-raised));
+      color: var(--app-accent);
+    }
+
+    .favourite-button svg { width: 20px; height: 20px; }
+
+    .entry-title {
+      margin: 0 0 9px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.52rem, 2.5vw, 2.28rem);
+      font-weight: 560;
+      letter-spacing: -.026em;
+      line-height: 1.08;
+    }
+
+    .entry-description {
+      max-width: 610px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: .93rem;
+      line-height: 1.55;
+    }
+
+    .entry-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: auto;
+      padding-top: 23px;
+    }
+
+    .launch-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 47px;
+      padding: 11px 17px;
+      border: 1px solid color-mix(in srgb, var(--app-accent) 80%, #000 8%);
+      border-radius: 13px;
+      background: var(--app-accent);
+      color: #fff;
+      font-size: .87rem;
+      font-weight: 760;
+      line-height: 1;
+      text-decoration: none;
+      box-shadow: 0 7px 16px color-mix(in srgb, var(--app-accent) 18%, transparent);
+      transition: transform .18s var(--ease), filter .18s ease;
+    }
+
+    .launch-button:hover { transform: translateY(-1px); filter: saturate(.9) brightness(.98); }
+
+    .launch-button svg { width: 18px; height: 18px; }
+
+    .open-count {
+      color: var(--ink-soft);
+      font-size: .76rem;
+      font-weight: 650;
+    }
+
+    .app-visual {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-width: 0;
+      min-height: 146px;
+      place-items: center;
+      overflow: hidden;
+      color: var(--app-accent);
+      background: color-mix(in srgb, var(--app-accent) 8%, var(--surface));
+    }
+
+    .app-entry[data-app="bsl"] .app-visual {
+      position: absolute;
+      right: -24px;
+      bottom: -31px;
+      width: 180px;
+      height: 180px;
+      min-height: 0;
+      border: 1px solid color-mix(in srgb, var(--app-accent) 26%, transparent);
+      border-radius: 50%;
+      opacity: .7;
+      transform: rotate(-8deg);
+    }
+
+    .app-entry[data-app="bsl"] .entry-description { max-width: 290px; }
+
+    .app-entry[data-app="studio"] .app-visual {
+      border-left: 1px solid color-mix(in srgb, var(--app-accent) 18%, var(--line));
+    }
+
+    .app-entry[data-app="maths-web"] .app-visual {
+      border-left: 1px solid color-mix(in srgb, var(--app-accent) 18%, var(--line));
+      background:
+        repeating-linear-gradient(0deg, transparent 0 25px, color-mix(in srgb, var(--app-accent) 9%, transparent) 25px 26px),
+        color-mix(in srgb, var(--app-accent) 7%, var(--surface));
+    }
+
+    .motif {
+      width: min(68%, 190px);
+      height: auto;
+      overflow: visible;
+    }
+
+    .motif line, .motif path, .motif rect, .motif circle, .motif polyline {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .recent-strip {
+      margin-top: 22px;
+      padding: 19px 2px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .section-label {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .text-button {
+      min-height: 40px;
+      padding: 7px 8px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 740;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-underline-offset: 4px;
+    }
+
+    .text-button:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+    .recent-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      min-height: 44px;
+      align-items: center;
+    }
+
+    .recent-chip {
+      --app-accent: #4d766f;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 8px 13px 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: .8rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 2px 7px rgba(40, 50, 44, .035);
+      transition: border-color .18s ease, transform .18s var(--ease);
+    }
+
+    .recent-chip:hover { transform: translateY(-1px); border-color: var(--app-accent); }
+
+    .chip-icon {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--app-accent) 13%, var(--surface));
+      color: var(--app-accent);
+    }
+
+    .chip-icon svg { width: 16px; height: 16px; }
+
+    .empty-note {
+      margin: 0;
+      color: var(--ink-soft);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    .subpage-header {
+      max-width: 780px;
+      margin-bottom: 34px;
+    }
+
+    .subpage-title {
+      margin: 0 0 11px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 4.8vw, 4rem);
+      font-weight: 520;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+
+    .subpage-intro {
+      max-width: 640px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: .98rem;
+      line-height: 1.55;
+    }
+
+    .recent-list {
+      display: grid;
+      max-width: 920px;
+      gap: 11px;
+    }
+
+    .recent-row {
+      --app-accent: #4d766f;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 17px;
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+    }
+
+    .recent-row-icon {
+      display: grid;
+      width: 54px;
+      height: 54px;
+      place-items: center;
+      border-radius: 17px;
+      background: color-mix(in srgb, var(--app-accent) 12%, var(--surface-raised));
+      color: var(--app-accent);
+    }
+
+    .recent-row-icon svg { width: 27px; height: 27px; }
+
+    .recent-row-copy { min-width: 0; }
+
+    .recent-row-name {
+      margin: 0 0 4px;
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .recent-row-meta { margin: 0; color: var(--ink-soft); font-size: .77rem; }
+
+    .mini-favourite {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+    }
+
+    .mini-favourite[aria-pressed="true"] { color: var(--app-accent); background: color-mix(in srgb, var(--app-accent) 10%, transparent); }
+
+    .mini-favourite svg { width: 19px; height: 19px; }
+
+    .recent-launch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--surface-raised);
+      color: var(--ink);
+      font-size: .8rem;
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .recent-launch:hover { border-color: var(--app-accent); color: var(--app-accent); }
+
+    .empty-state {
+      max-width: 680px;
+      padding: clamp(25px, 5vw, 46px);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-xl);
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+    }
+
+    .empty-state svg { width: 39px; height: 39px; margin-bottom: 18px; color: var(--ink-soft); }
+
+    .empty-state h3 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 560;
+    }
+
+    .empty-state p { margin: 0 0 20px; color: var(--ink-soft); line-height: 1.55; }
+
+    .secondary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px;
+      padding: 10px 15px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--surface-raised);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 740;
+      text-decoration: none;
+    }
+
+    .secondary-button:disabled {
+      cursor: default;
+      opacity: .48;
+    }
+
+    .settings-layout {
+      display: grid;
+      max-width: 1000px;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, .34fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .settings-panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow-small);
+    }
+
+    .setting-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, auto);
+      align-items: center;
+      gap: 28px;
+      padding: clamp(20px, 3vw, 28px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .setting-row:last-child { border-bottom: 0; }
+
+    .setting-copy h3 {
+      margin: 0 0 6px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+      font-weight: 600;
+    }
+
+    .setting-copy p { margin: 0; color: var(--ink-soft); font-size: .82rem; line-height: 1.5; }
+
+    .segmented {
+      display: inline-grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      min-width: 250px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--paper-deep);
+    }
+
+    .segmented label { position: relative; cursor: pointer; }
+
+    .segmented input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented span {
+      display: grid;
+      min-height: 38px;
+      padding: 8px 11px;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--ink-soft);
+      font-size: .76rem;
+      font-weight: 730;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .segmented input:checked + span {
+      background: var(--surface-raised);
+      color: var(--ink);
+      box-shadow: 0 2px 7px rgba(30, 36, 33, .1);
+    }
+
+    .segmented input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 44px;
+      cursor: pointer;
+    }
+
+    .switch input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .switch-track {
+      position: relative;
+      width: 52px;
+      height: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: 99px;
+      background: var(--paper-deep);
+      transition: background .18s ease, border-color .18s ease;
+    }
+
+    .switch-track::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--surface-raised);
+      box-shadow: 0 2px 6px rgba(20, 28, 24, .18);
+      transition: transform .2s var(--ease);
+    }
+
+    .switch input:checked + .switch-track { border-color: var(--focus); background: var(--focus); }
+
+    .switch input:checked + .switch-track::after { transform: translateX(22px); }
+
+    .switch input:focus-visible + .switch-track { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+    .settings-note {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+    }
+
+    .settings-note h3 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+      font-weight: 590;
+    }
+
+    .settings-note p { margin: 0 0 16px; color: var(--ink-soft); font-size: .8rem; line-height: 1.55; }
+
+    .danger-quiet { color: #89594f; }
+
+    .viewer[hidden] { display: none; }
+
+    .viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 800;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--paper);
+    }
+
+    .viewer-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      min-height: 68px;
+      padding: max(10px, env(safe-area-inset-top)) max(15px, env(safe-area-inset-right)) 10px max(15px, env(safe-area-inset-left));
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: 0 2px 14px rgba(20, 28, 24, .06);
+    }
+
+    .viewer-identity {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 12px;
+    }
+
+    .viewer-accent {
+      width: 7px;
+      height: 34px;
+      border-radius: 99px;
+      background: var(--viewer-accent, var(--focus));
+    }
+
+    .viewer-title-wrap { min-width: 0; }
+
+    .viewer-kicker { display: block; margin-bottom: 1px; color: var(--ink-soft); font-size: .67rem; font-weight: 780; letter-spacing: .1em; text-transform: uppercase; }
+
+    .viewer-title {
+      display: block;
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .viewer-actions { display: flex; align-items: center; gap: 8px; }
+
+    .viewer-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-raised);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 730;
+      text-decoration: none;
+    }
+
+    .viewer-button svg { width: 17px; height: 17px; }
+
+    .viewer-stage { position: relative; min-width: 0; min-height: 0; background: #fff; }
+
+    .viewer-frame { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+
+    .frame-loading, .frame-fallback {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: var(--paper);
+      text-align: center;
+    }
+
+    .frame-loading[hidden], .frame-fallback[hidden] { display: none; }
+
+    .loading-card, .fallback-card {
+      width: min(100%, 480px);
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow-small);
+    }
+
+    .loading-mark {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 17px;
+      border: 3px solid var(--line);
+      border-top-color: var(--viewer-accent, var(--focus));
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-card p, .fallback-card p { margin: 0; color: var(--ink-soft); line-height: 1.55; }
+
+    .fallback-card svg { width: 42px; height: 42px; margin-bottom: 16px; color: var(--viewer-accent, var(--focus)); }
+
+    .fallback-card h2 { margin: 0 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: 1.55rem; font-weight: 580; }
+
+    .fallback-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+
+    .status-live {
+      position: fixed;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 950;
+      max-width: min(360px, calc(100vw - 36px));
+      padding: 12px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--ink);
+      color: var(--surface);
+      box-shadow: var(--shadow);
+      font-size: .8rem;
+      font-weight: 680;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity .18s ease, transform .18s var(--ease);
+    }
+
+    .status-live.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1100px) {
+      .app-shell { display: block; }
+
+      .sidebar {
+        position: sticky;
+        z-index: 100;
+        height: auto;
+        min-height: 76px;
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        padding: max(10px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 10px max(18px, env(safe-area-inset-left));
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, .09);
+        overflow: visible;
+      }
+
+      .brand { flex: 1 1 auto; padding: 0; }
+
+      .primary-nav { display: flex; flex: 0 0 auto; gap: 5px; }
+
+      .nav-button { width: auto; min-height: 46px; padding: 9px 12px; }
+
+      .nav-button[aria-current="page"] { box-shadow: inset 0 -3px 0 #d7b982; }
+
+      .side-note { display: none; }
+
+      .main { padding-top: 25px; }
+
+      .topline { margin-bottom: 22px; }
+    }
+
+    @media (max-width: 840px) {
+      .main { padding-inline: 22px; }
+
+      .page-heading { grid-template-columns: 1fr; gap: 14px; }
+
+      .greeting { max-width: 520px; margin: 0; text-align: left; }
+
+      .app-entry[data-app="bsl"],
+      .app-entry[data-app="studio"],
+      .app-entry[data-app="maths-web"] {
+        grid-column: 1 / -1;
+      }
+
+      .app-entry[data-app="bsl"] { min-height: 220px; }
+
+      .app-entry[data-app="studio"] { min-height: 220px; grid-template-columns: minmax(0, 1fr) 190px; }
+
+      .app-entry[data-app="maths-web"] { grid-template-columns: minmax(0, 1fr) 190px; }
+
+      .settings-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar { gap: 8px; }
+
+      .brand-mark { width: 39px; height: 39px; flex-basis: 39px; }
+
+      .brand-text { display: none; }
+
+      .primary-nav { flex: 1; justify-content: flex-end; }
+
+      .nav-button { min-width: 48px; justify-content: center; padding-inline: 10px; }
+
+      .nav-button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+      .main { padding-inline: 16px; padding-bottom: max(36px, env(safe-area-inset-bottom)); }
+
+      .topline { margin-bottom: 18px; }
+
+      .page-title { font-size: clamp(2.3rem, 13vw, 3.7rem); }
+
+      .app-entry[data-app="studio"],
+      .app-entry[data-app="maths-web"] { grid-template-columns: 1fr; }
+
+      .app-entry[data-app="studio"] .app-visual,
+      .app-entry[data-app="maths-web"] .app-visual { display: none; }
+
+      .recent-row { grid-template-columns: 48px minmax(0, 1fr) auto; gap: 12px; }
+
+      .recent-row-icon { width: 48px; height: 48px; border-radius: 14px; }
+
+      .recent-row .mini-favourite { display: none; }
+
+      .recent-launch { padding-inline: 12px; }
+
+      .setting-row { grid-template-columns: 1fr; gap: 16px; }
+
+      .segmented { width: 100%; min-width: 0; }
+
+      .viewer-bar { grid-template-columns: minmax(0, 1fr) auto; }
+
+      .viewer-actions .open-label { display: none; }
+
+      .viewer-button { width: 44px; padding-inline: 0; }
+    }
+
+    @media (max-width: 390px) {
+      .today { font-size: .76rem; }
+
+      .entry-content { padding: 21px 20px 23px 23px; }
+
+      .entry-footer { align-items: flex-start; flex-direction: column; }
+
+      .launch-button { width: 100%; }
+
+      .recent-row { grid-template-columns: 44px minmax(0, 1fr); }
+
+      .recent-launch { grid-column: 1 / -1; width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+
+    html[data-reduced-motion="true"] *,
+    html[data-reduced-motion="true"] *::before,
+    html[data-reduced-motion="true"] *::after {
+      scroll-behavior: auto !important;
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to workspace</a>
+
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" aria-label="Blue Bridge navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M5.5 7.5h6.75c3.45 0 5.75 2.25 5.75 5.7v11.3h-6.75c-3.45 0-5.75-2.25-5.75-5.7V7.5Z" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M26.5 7.5h-2.75c-3.45 0-5.75 2.25-5.75 5.7v11.3h2.75c3.45 0 5.75-2.25 5.75-5.7V7.5Z" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M18 13v11.5" stroke="currentColor" stroke-width="1.7"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-kicker">Will’s workspace</span>
+          <span class="brand-name">Blue Bridge</span>
+        </span>
+      </div>
+
+      <nav class="primary-nav" aria-label="Main sections">
+        <button class="nav-button" type="button" data-page-target="home" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z"/><path d="M9 20v-6h6v6"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-button" type="button" data-page-target="recent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></svg>
+          <span>Recent</span>
+        </button>
+        <button class="nav-button" type="button" data-page-target="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 14.5V9.4l-2-.6-.8-1.9 1-1.8-3.6-2.1-1.4 1.5-2-.1L9.1 2.7 5.5 4.8l.5 2-.9 1.6-2.1.5V13l2 .7.8 1.9-1 1.8 3.6 2.1 1.5-1.5 2 .1 1.1 1.8 3.6-2.1-.5-2 .9-1.6 2-.7Z"/></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <p class="side-note">Three teaching rooms,<br>one quiet bridge.</p>
+    </aside>
+
+    <main class="main" id="mainContent" tabindex="-1">
+      <div class="topline">
+        <time class="today" id="currentDate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3v5M16.5 3v5M3.5 10h17"/></svg>
+          <span></span>
+        </time>
+      </div>
+
+      <section class="page is-active" data-page="home" aria-labelledby="homeTitle">
+        <header class="page-heading">
+          <div>
+            <p class="eyebrow">Your teaching rooms</p>
+            <h1 class="page-title" id="homeTitle" tabindex="-1">Blue<br> Bridge</h1>
+          </div>
+          <p class="greeting" id="contextGreeting">Choose the room you need. Everything else can wait.</p>
+        </header>
+
+        <section class="app-shelf" id="appShelf" aria-label="Teaching applications"></section>
+
+        <section class="recent-strip" aria-labelledby="homeRecentTitle">
+          <div class="section-label-row">
+            <h2 class="section-label" id="homeRecentTitle">Recently opened</h2>
+            <button class="text-button" type="button" data-page-target="recent">See activity</button>
+          </div>
+          <div class="recent-chips" id="homeRecentList"></div>
+        </section>
+      </section>
+
+      <section class="page" data-page="recent" aria-labelledby="recentTitle" hidden>
+        <header class="subpage-header">
+          <p class="eyebrow">Your path back</p>
+          <h1 class="subpage-title" id="recentTitle" tabindex="-1">Recent rooms</h1>
+          <p class="subpage-intro">A short record of what you have opened on this device. Your most recent room stays at the top.</p>
+        </header>
+        <div class="recent-list" id="recentPageList"></div>
+      </section>
+
+      <section class="page" data-page="settings" aria-labelledby="settingsTitle" hidden>
+        <header class="subpage-header">
+          <p class="eyebrow">A few quiet choices</p>
+          <h1 class="subpage-title" id="settingsTitle" tabindex="-1">Settings</h1>
+          <p class="subpage-intro">Choose how the three rooms open and how this front door feels. These choices stay on this device.</p>
+        </header>
+
+        <div class="settings-layout">
+          <div class="settings-panel">
+            <section class="setting-row" aria-labelledby="launchSettingTitle">
+              <div class="setting-copy">
+                <h3 id="launchSettingTitle">Open applications</h3>
+                <p>New tab is the dependable default. Embedded mode keeps supported apps inside Blue Bridge.</p>
+              </div>
+              <div class="segmented" role="radiogroup" aria-label="Application launch mode">
+                <label><input type="radio" name="launchMode" value="new-tab"><span>New tab</span></label>
+                <label><input type="radio" name="launchMode" value="embed"><span>Inside Blue Bridge</span></label>
+              </div>
+            </section>
+
+            <section class="setting-row" aria-labelledby="appearanceSettingTitle">
+              <div class="setting-copy">
+                <h3 id="appearanceSettingTitle">Appearance</h3>
+                <p>Follow this device, or keep the workspace consistently light or dark.</p>
+              </div>
+              <div class="segmented" role="radiogroup" aria-label="Appearance">
+                <label><input type="radio" name="appearance" value="system"><span>System</span></label>
+                <label><input type="radio" name="appearance" value="light"><span>Light</span></label>
+                <label><input type="radio" name="appearance" value="dark"><span>Dark</span></label>
+              </div>
+            </section>
+
+            <section class="setting-row" aria-labelledby="motionSettingTitle">
+              <div class="setting-copy">
+                <h3 id="motionSettingTitle">Reduce motion</h3>
+                <p>Remove the small transitions used when moving between rooms and sections.</p>
+              </div>
+              <label class="switch">
+                <input id="reducedMotionToggle" type="checkbox">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span>Reduce</span>
+              </label>
+            </section>
+          </div>
+
+          <aside class="settings-note" aria-labelledby="localDataTitle">
+            <h3 id="localDataTitle">Kept locally</h3>
+            <p id="localDataSummary">Recent rooms, favourites and preferences are stored only in this browser.</p>
+            <button class="secondary-button danger-quiet" id="clearRecentButton" type="button">Clear recent activity</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="viewer" id="embeddedViewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle" hidden>
+    <header class="viewer-bar">
+      <div class="viewer-identity">
+        <span class="viewer-accent" aria-hidden="true"></span>
+        <span class="viewer-title-wrap">
+          <span class="viewer-kicker">Open inside Blue Bridge</span>
+          <strong class="viewer-title" id="viewerTitle">Application</strong>
+        </span>
+      </div>
+      <div class="viewer-actions">
+        <a class="viewer-button" id="viewerNewTab" href="#" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 13v6H5V5h6"/></svg>
+          <span class="open-label">New tab</span>
+        </a>
+        <button class="viewer-button" id="closeViewer" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>
+          <span class="open-label">Close</span>
+        </button>
+      </div>
+    </header>
+    <div class="viewer-stage">
+      <iframe class="viewer-frame" id="appFrame" title="Embedded teaching application" allow="fullscreen; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div class="frame-loading" id="frameLoading">
+        <div class="loading-card">
+          <div class="loading-mark" aria-hidden="true"></div>
+          <p>Opening the room…</p>
+        </div>
+      </div>
+      <div class="frame-fallback" id="frameFallback" hidden>
+        <div class="fallback-card">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="7" y="8" width="34" height="29" rx="5"/><path d="m17 43 7-6 7 6M15 18h18M15 25h12"/></svg>
+          <h2>This room needs its own tab</h2>
+          <p>The application could not be displayed safely inside Blue Bridge. Nothing is lost.</p>
+          <div class="fallback-actions">
+            <a class="launch-button" id="fallbackNewTab" href="#" target="_blank" rel="noopener noreferrer">Open in New Tab</a>
+            <button class="secondary-button" id="fallbackClose" type="button">Return home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="status-live" id="statusLive" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    /* ================================================================
+       APPLICATION REGISTRY
+       Future build: add another complete application object here.
+       The rendering, favourites, recents and launch behaviour will adapt.
+       Do not copy an application into this project; link to its live URL.
+       ================================================================ */
+    const APPLICATIONS = [
+      {
+        id: "bsl",
+        name: "BSL Learner Companion",
+        description: "Your guided British Sign Language learning space, with a clear path back into daily practice.",
+        url: "https://6wyk5wz8rf-star.github.io/BZLX/",
+        icon: "gesture",
+        accent: "#417b70",
+        favourite: false
+      },
+      {
+        id: "studio",
+        name: "Maths Modelling Studio",
+        description: "Build, explore and present mathematical models with a workspace made for classroom thinking.",
+        url: "https://6wyk5wz8rf-star.github.io/-maths-modelling-studio/",
+        icon: "model",
+        accent: "#a46149",
+        favourite: false
+      },
+      {
+        id: "maths-web",
+        name: "Maths Web",
+        description: "Your main Year 4 mathematics curriculum and teaching environment, ready for planning, teaching and moving through the year.",
+        url: "https://6wyk5wz8rf-star.github.io/WEB-YR-4/",
+        icon: "book",
+        accent: "#59678e",
+        favourite: false
+      }
+    ];
+
+    /* ================================================================
+       SIMPLE LOCAL STATE
+       One versioned object stores only device-local activity and choices.
+       ================================================================ */
+    const STORAGE_KEY = "blueBridge:v1";
+    const DEFAULT_STATE = {
+      recents: [],
+      counts: {},
+      favourites: {},
+      launchMode: "new-tab",
+      appearance: "system",
+      reducedMotion: false
+    };
+
+    let state = loadState();
+    let frameTimer = 0;
+    let activeEmbeddedApp = null;
+    let statusTimer = 0;
+
+    const appShelf = document.getElementById("appShelf");
+    const homeRecentList = document.getElementById("homeRecentList");
+    const recentPageList = document.getElementById("recentPageList");
+    const embeddedViewer = document.getElementById("embeddedViewer");
+    const appFrame = document.getElementById("appFrame");
+    const frameLoading = document.getElementById("frameLoading");
+    const frameFallback = document.getElementById("frameFallback");
+    const statusLive = document.getElementById("statusLive");
+    const appShell = document.getElementById("appShell");
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!saved || typeof saved !== "object") return structuredClone(DEFAULT_STATE);
+
+        const validIds = new Set(APPLICATIONS.map(app => app.id));
+        return {
+          recents: Array.isArray(saved.recents) ? saved.recents.filter(id => validIds.has(id)).slice(0, APPLICATIONS.length) : [],
+          counts: saved.counts && typeof saved.counts === "object" ? saved.counts : {},
+          favourites: saved.favourites && typeof saved.favourites === "object" ? saved.favourites : {},
+          launchMode: saved.launchMode === "embed" ? "embed" : "new-tab",
+          appearance: ["system", "light", "dark"].includes(saved.appearance) ? saved.appearance : "system",
+          reducedMotion: Boolean(saved.reducedMotion)
+        };
+      } catch (_) {
+        return structuredClone(DEFAULT_STATE);
+      }
+    }
+
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* Private browsing can restrict storage. */ }
+    }
+
+    function getApp(id) { return APPLICATIONS.find(app => app.id === id); }
+
+    function isFavourite(app) {
+      return Object.prototype.hasOwnProperty.call(state.favourites, app.id)
+        ? Boolean(state.favourites[app.id])
+        : Boolean(app.favourite);
+    }
+
+    function iconSvg(icon, className = "") {
+      const common = `class="${className}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+      if (icon === "gesture") {
+        return `<svg ${common}><path d="M14.5 26V13.4a3 3 0 0 1 6 0V23"/><path d="M20.5 22V9.8a3 3 0 1 1 6 0V22"/><path d="M26.5 22V12.2a3 3 0 0 1 6 0v11.3"/><path d="M32.5 23.5v-6.1a3 3 0 0 1 6 0v12.1C38.5 38 33 43 24.5 43c-7.2 0-11.1-3.8-14.7-9.4L7 29.2a3.4 3.4 0 0 1 5.6-3.8l1.9 2.6"/><path d="M10 9c1.6-2.3 3.8-3.7 6.4-4.1M39 8.5c-1.2-2-3-3.3-5.4-4" opacity=".65"/></svg>`;
+      }
+      if (icon === "model") {
+        return `<svg ${common}><rect x="6" y="9" width="36" height="12" rx="3"/><path d="M18 9v12M31 9v12"/><rect x="6" y="28" width="22" height="11" rx="3"/><circle cx="36.5" cy="33.5" r="5.5"/><path d="M9 15h6M22 15h6M35 15h4" opacity=".7"/></svg>`;
+      }
+      return `<svg ${common}><path d="M7 10.5h11c4 0 6.5 2.5 6.5 6.4v23H14c-4.2 0-7-2.7-7-6.8V10.5Z"/><path d="M41 10.5h-10c-4 0-6.5 2.5-6.5 6.4v23H34c4.2 0 7-2.7 7-6.8V10.5Z"/><path d="M12 18h7M12 24h7M30 18h6M30 24h6" opacity=".7"/></svg>`;
+    }
+
+    function starSvg(filled = false) {
+      return `<svg viewBox="0 0 24 24" ${filled ? 'fill="currentColor"' : 'fill="none"'} stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.75 5.65 6.25.86-4.55 4.38 1.12 6.18L12 17.13l-5.57 2.94 1.12-6.18L3 9.51l6.25-.86L12 3Z"/></svg>`;
+    }
+
+    function launchSvg() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 13v6H5V5h6"/></svg>`;
+    }
+
+    function motifMarkup(app) {
+      if (app.icon === "gesture") return iconSvg(app.icon, "motif");
+      if (app.icon === "model") {
+        return `<svg class="motif" viewBox="0 0 220 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="20" y="24" width="180" height="45" rx="12"/><path d="M74 24v45M144 24v45"/><circle cx="46" cy="108" r="17"/><circle cx="109" cy="108" r="17"/><circle cx="174" cy="108" r="17"/><path d="M63 108h29M126 108h31" stroke-dasharray="5 6" opacity=".65"/><path d="M43 45h13M93 45h30M162 45h20" opacity=".55"/></svg>`;
+      }
+      return `<svg class="motif" viewBox="0 0 220 145" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M28 24h55c17 0 27 10 27 27v72H58c-18 0-30-11-30-29V24Z"/><path d="M192 24h-55c-17 0-27 10-27 27v72h52c18 0 30-11 30-29V24Z"/><path d="M110 51v72M49 48h38M49 65h38M49 82h28M133 48h38M133 65h38M133 82h28" opacity=".58"/></svg>`;
+    }
+
+    function roomLabel(app) {
+      if (app.id === "bsl") return "Guided practice";
+      if (app.id === "studio") return "Model table";
+      return "Year 4 curriculum";
+    }
+
+    function buttonLabel(app) {
+      if (app.id === "bsl") return "Open Companion";
+      if (app.id === "studio") return "Open Studio";
+      return "Open Maths Web";
+    }
+
+    function countLabel(app) {
+      const count = Number(state.counts[app.id]) || 0;
+      if (count === 0) return "Ready when you are";
+      if (count === 1) return "Opened once on this device";
+      return `Opened ${count} times on this device`;
+    }
+
+    function renderApps() {
+      appShelf.innerHTML = APPLICATIONS.map(app => {
+        const favourite = isFavourite(app);
+        return `
+          <article class="app-entry" data-app="${app.id}" style="--app-accent:${app.accent}">
+            <div class="entry-content">
+              <div class="entry-topline">
+                <span class="room-label">${roomLabel(app)}</span>
+                <button class="favourite-button" type="button" data-favourite="${app.id}" aria-pressed="${favourite}" aria-label="${favourite ? "Remove" : "Add"} ${app.name} ${favourite ? "from" : "to"} favourites">
+                  ${starSvg(favourite)}
+                </button>
+              </div>
+              <h2 class="entry-title">${app.name}</h2>
+              <p class="entry-description">${app.description}</p>
+              <div class="entry-footer">
+                <a class="launch-button" data-launch="${app.id}" href="${app.url}" target="_blank" rel="noopener noreferrer">
+                  <span>${buttonLabel(app)}</span>${launchSvg()}
+                </a>
+                <span class="open-count">${countLabel(app)}</span>
+              </div>
+            </div>
+            <div class="app-visual">${motifMarkup(app)}</div>
+          </article>`;
+      }).join("");
+    }
+
+    function renderRecents() {
+      const recentApps = state.recents.map(getApp).filter(Boolean);
+
+      homeRecentList.innerHTML = recentApps.length
+        ? recentApps.map(app => `
+            <a class="recent-chip" style="--app-accent:${app.accent}" data-launch="${app.id}" href="${app.url}" target="_blank" rel="noopener noreferrer">
+              <span class="chip-icon">${iconSvg(app.icon)}</span>
+              <span>${app.name}</span>
+            </a>`).join("")
+        : `<p class="empty-note">Your most recently opened rooms will settle here.</p>`;
+
+      if (!recentApps.length) {
+        recentPageList.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="24" cy="24" r="18"/><path d="M24 14v10l7 4"/></svg>
+            <h3>No recent rooms yet</h3>
+            <p>Open any of your three applications and it will appear here for a quick return.</p>
+            <button class="secondary-button" type="button" data-page-target="home">Choose a room</button>
+          </div>`;
+      } else {
+        recentPageList.innerHTML = recentApps.map(app => {
+          const favourite = isFavourite(app);
+          return `
+            <article class="recent-row" style="--app-accent:${app.accent}">
+              <span class="recent-row-icon">${iconSvg(app.icon)}</span>
+              <div class="recent-row-copy">
+                <h2 class="recent-row-name">${app.name}</h2>
+                <p class="recent-row-meta">${countLabel(app)}</p>
+              </div>
+              <button class="mini-favourite" type="button" data-favourite="${app.id}" aria-pressed="${favourite}" aria-label="${favourite ? "Remove" : "Add"} ${app.name} ${favourite ? "from" : "to"} favourites">${starSvg(favourite)}</button>
+              <a class="recent-launch" data-launch="${app.id}" href="${app.url}" target="_blank" rel="noopener noreferrer">Open</a>
+            </article>`;
+        }).join("");
+      }
+
+      const totalOpens = Object.values(state.counts).reduce((sum, value) => sum + (Number(value) || 0), 0);
+      document.getElementById("localDataSummary").textContent = totalOpens
+        ? `${totalOpens} application ${totalOpens === 1 ? "opening is" : "openings are"} recorded on this device, alongside your favourites and preferences.`
+        : "Recent rooms, favourites and preferences are stored only in this browser.";
+      document.getElementById("clearRecentButton").disabled = state.recents.length === 0;
+    }
+
+    function recordOpen(app, renderNow = true) {
+      state.counts[app.id] = (Number(state.counts[app.id]) || 0) + 1;
+      state.recents = [app.id, ...state.recents.filter(id => id !== app.id)].slice(0, APPLICATIONS.length);
+      saveState();
+      if (renderNow) {
+        renderApps();
+        renderRecents();
+      }
+    }
+
+    function toggleFavourite(app) {
+      state.favourites[app.id] = !isFavourite(app);
+      saveState();
+      renderApps();
+      renderRecents();
+      window.requestAnimationFrame(() => {
+        document.querySelector(`.page.is-active [data-favourite="${app.id}"]`)?.focus({ preventScroll: true });
+      });
+      showStatus(`${app.name} ${state.favourites[app.id] ? "added to" : "removed from"} favourites.`);
+    }
+
+    function openEmbedded(app) {
+      activeEmbeddedApp = app;
+      clearTimeout(frameTimer);
+      embeddedViewer.style.setProperty("--viewer-accent", app.accent);
+      document.getElementById("viewerTitle").textContent = app.name;
+      document.getElementById("viewerNewTab").href = app.url;
+      document.getElementById("fallbackNewTab").href = app.url;
+      frameLoading.hidden = false;
+      frameFallback.hidden = true;
+      embeddedViewer.hidden = false;
+      appShell.inert = true;
+      document.body.style.overflow = "hidden";
+      appFrame.title = `${app.name} inside Blue Bridge`;
+
+      let settled = false;
+      appFrame.onload = () => {
+        if (appFrame.src === "about:blank") return;
+        let frameLooksEmpty = false;
+        try {
+          const frameLocation = appFrame.contentWindow?.location?.href;
+          const frameBody = appFrame.contentDocument?.body;
+          frameLooksEmpty = frameLocation === "about:blank" || !frameBody || frameBody.childElementCount === 0;
+        } catch (_) {
+          /* A cross-origin frame cannot be inspected; a completed load is accepted. */
+        }
+        if (frameLooksEmpty) {
+          showFrameFallback();
+          return;
+        }
+        settled = true;
+        clearTimeout(frameTimer);
+        frameLoading.hidden = true;
+        frameFallback.hidden = true;
+      };
+      appFrame.onerror = () => showFrameFallback();
+      appFrame.src = app.url;
+
+      frameTimer = window.setTimeout(() => {
+        if (!settled) showFrameFallback();
+      }, 9000);
+
+      document.getElementById("closeViewer").focus({ preventScroll: true });
+    }
+
+    function showFrameFallback() {
+      clearTimeout(frameTimer);
+      frameLoading.hidden = true;
+      frameFallback.hidden = false;
+    }
+
+    function closeEmbedded() {
+      if (embeddedViewer.hidden) return;
+      const returningAppId = activeEmbeddedApp?.id;
+      clearTimeout(frameTimer);
+      embeddedViewer.hidden = true;
+      appShell.inert = false;
+      document.body.style.overflow = "";
+      appFrame.onload = null;
+      appFrame.onerror = null;
+      appFrame.src = "about:blank";
+      activeEmbeddedApp = null;
+      const activeLaunch = returningAppId ? document.querySelector(`[data-launch="${returningAppId}"]`) : null;
+      if (activeLaunch) activeLaunch.focus({ preventScroll: true });
+    }
+
+    function showPage(name, moveFocus = true) {
+      const page = document.querySelector(`[data-page="${name}"]`);
+      if (!page) return;
+
+      document.querySelectorAll("[data-page]").forEach(section => {
+        const active = section === page;
+        section.classList.toggle("is-active", active);
+        section.hidden = !active;
+      });
+      document.querySelectorAll(".nav-button[data-page-target]").forEach(button => {
+        if (button.dataset.pageTarget === name) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      if (name === "recent") renderRecents();
+      if (name === "settings") syncSettingsControls();
+      window.scrollTo({ top: 0, behavior: state.reducedMotion ? "auto" : "smooth" });
+      if (moveFocus) page.querySelector("h1")?.focus?.({ preventScroll: true });
+    }
+
+    function applyPreferences() {
+      if (state.appearance === "system") delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = state.appearance;
+      document.documentElement.dataset.reducedMotion = String(state.reducedMotion);
+
+      const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const resolvedDark = state.appearance === "dark" || (state.appearance === "system" && systemDark);
+      themeMeta.setAttribute("content", resolvedDark ? "#171d1b" : "#f4f0e7");
+    }
+
+    function syncSettingsControls() {
+      document.querySelector(`input[name="launchMode"][value="${state.launchMode}"]`).checked = true;
+      document.querySelector(`input[name="appearance"][value="${state.appearance}"]`).checked = true;
+      document.getElementById("reducedMotionToggle").checked = state.reducedMotion;
+    }
+
+    function showStatus(message) {
+      clearTimeout(statusTimer);
+      statusLive.textContent = message;
+      statusLive.classList.add("is-visible");
+      statusTimer = window.setTimeout(() => statusLive.classList.remove("is-visible"), 2200);
+    }
+
+    function setDateAndGreeting() {
+      const now = new Date();
+      document.querySelector("#currentDate span").textContent = new Intl.DateTimeFormat("en-AU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }).format(now);
+      const localDate = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0")
+      ].join("-");
+      document.getElementById("currentDate").dateTime = localDate;
+
+      const hour = now.getHours();
+      const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+      document.getElementById("contextGreeting").textContent = `${greeting}. Choose the room you need; everything else can wait.`;
+    }
+
+    document.addEventListener("click", event => {
+      const pageButton = event.target.closest("[data-page-target]");
+      if (pageButton) {
+        event.preventDefault();
+        showPage(pageButton.dataset.pageTarget);
+        return;
+      }
+
+      const favouriteButton = event.target.closest("[data-favourite]");
+      if (favouriteButton) {
+        const app = getApp(favouriteButton.dataset.favourite);
+        if (app) toggleFavourite(app);
+        return;
+      }
+
+      const launchLink = event.target.closest("[data-launch]");
+      if (launchLink) {
+        const app = getApp(launchLink.dataset.launch);
+        if (!app) return;
+        if (state.launchMode === "embed") {
+          event.preventDefault();
+          recordOpen(app);
+          openEmbedded(app);
+        } else {
+          /* Preserve the anchor's native new-tab action before refreshing its UI. */
+          recordOpen(app, false);
+          window.setTimeout(() => {
+            renderApps();
+            renderRecents();
+          }, 0);
+        }
+      }
+    });
+
+    document.querySelectorAll('input[name="launchMode"]').forEach(input => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        state.launchMode = input.value;
+        saveState();
+        showStatus(input.value === "embed" ? "Applications will open inside Blue Bridge when supported." : "Applications will open in a new tab.");
+      });
+    });
+
+    document.querySelectorAll('input[name="appearance"]').forEach(input => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        state.appearance = input.value;
+        applyPreferences();
+        saveState();
+      });
+    });
+
+    document.getElementById("reducedMotionToggle").addEventListener("change", event => {
+      state.reducedMotion = event.target.checked;
+      applyPreferences();
+      saveState();
+    });
+
+    document.getElementById("clearRecentButton").addEventListener("click", () => {
+      state.recents = [];
+      saveState();
+      renderRecents();
+      showStatus("Recent activity cleared. Opening counts are unchanged.");
+    });
+
+    document.getElementById("closeViewer").addEventListener("click", closeEmbedded);
+    document.getElementById("fallbackClose").addEventListener("click", closeEmbedded);
+    document.getElementById("viewerNewTab").addEventListener("click", () => {
+      if (activeEmbeddedApp) showStatus(`${activeEmbeddedApp.name} opened in a new tab.`);
+    });
+    document.getElementById("fallbackNewTab").addEventListener("click", () => {
+      if (activeEmbeddedApp) showStatus(`${activeEmbeddedApp.name} opened in a new tab.`);
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !embeddedViewer.hidden) closeEmbedded();
+    });
+
+    if (window.matchMedia) {
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => {
+        if (state.appearance === "system") applyPreferences();
+      });
+    }
+
+    setDateAndGreeting();
+    applyPreferences();
+    syncSettingsControls();
+    renderApps();
+    renderRecents();
+  </script>
+</body>
+</html>
