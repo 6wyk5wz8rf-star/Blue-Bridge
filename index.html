@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f0e7">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="A calm home for BSL Learner Companion, Maths Modelling Studio and Maths Web.">
+  <meta name="description" content="A calm home for BSL Learner Companion, Maths Modelling Studio, Maths Web and Anchor Chart Studio.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Blue Bridge">
@@ -343,9 +343,13 @@
     }
 
     .app-entry[data-app="maths-web"] {
-      grid-column: 1 / -1;
-      grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr);
-      min-height: 204px;
+      grid-column: span 7;
+      grid-template-columns: minmax(0, 1.25fr) minmax(190px, .75fr);
+    }
+
+    .app-entry[data-app="anchor-art"] {
+      grid-column: span 5;
+      grid-template-columns: minmax(0, 1fr) minmax(140px, .52fr);
     }
 
     .entry-content {
@@ -498,6 +502,13 @@
       border-left: 1px solid color-mix(in srgb, var(--app-accent) 18%, var(--line));
       background:
         repeating-linear-gradient(0deg, transparent 0 25px, color-mix(in srgb, var(--app-accent) 9%, transparent) 25px 26px),
+        color-mix(in srgb, var(--app-accent) 7%, var(--surface));
+    }
+
+    .app-entry[data-app="anchor-art"] .app-visual {
+      border-left: 1px solid color-mix(in srgb, var(--app-accent) 18%, var(--line));
+      background:
+        linear-gradient(112deg, transparent 0 47%, color-mix(in srgb, var(--app-accent) 8%, transparent) 47% 53%, transparent 53%),
         color-mix(in srgb, var(--app-accent) 7%, var(--surface));
     }
 
@@ -1064,7 +1075,8 @@
 
       .app-entry[data-app="bsl"],
       .app-entry[data-app="studio"],
-      .app-entry[data-app="maths-web"] {
+      .app-entry[data-app="maths-web"],
+      .app-entry[data-app="anchor-art"] {
         grid-column: 1 / -1;
       }
 
@@ -1073,6 +1085,8 @@
       .app-entry[data-app="studio"] { min-height: 220px; grid-template-columns: minmax(0, 1fr) 190px; }
 
       .app-entry[data-app="maths-web"] { grid-template-columns: minmax(0, 1fr) 190px; }
+
+      .app-entry[data-app="anchor-art"] { grid-template-columns: minmax(0, 1fr) 190px; }
 
       .settings-layout { grid-template-columns: 1fr; }
     }
@@ -1097,10 +1111,12 @@
       .page-title { font-size: clamp(2.3rem, 13vw, 3.7rem); }
 
       .app-entry[data-app="studio"],
-      .app-entry[data-app="maths-web"] { grid-template-columns: 1fr; }
+      .app-entry[data-app="maths-web"],
+      .app-entry[data-app="anchor-art"] { grid-template-columns: 1fr; }
 
       .app-entry[data-app="studio"] .app-visual,
-      .app-entry[data-app="maths-web"] .app-visual { display: none; }
+      .app-entry[data-app="maths-web"] .app-visual,
+      .app-entry[data-app="anchor-art"] .app-visual { display: none; }
 
       .recent-row { grid-template-columns: 48px minmax(0, 1fr) auto; gap: 12px; }
 
@@ -1188,7 +1204,7 @@
         </button>
       </nav>
 
-      <p class="side-note">Three teaching rooms,<br>one quiet bridge.</p>
+      <p class="side-note">Four teaching rooms,<br>one quiet bridge.</p>
     </aside>
 
     <main class="main" id="mainContent" tabindex="-1">
@@ -1232,7 +1248,7 @@
         <header class="subpage-header">
           <p class="eyebrow">A few quiet choices</p>
           <h1 class="subpage-title" id="settingsTitle" tabindex="-1">Settings</h1>
-          <p class="subpage-intro">Choose how the three rooms open and how this front door feels. These choices stay on this device.</p>
+          <p class="subpage-intro">Choose how your rooms open and how this front door feels. These choices stay on this device.</p>
         </header>
 
         <div class="settings-layout">
@@ -1363,6 +1379,15 @@
         icon: "book",
         accent: "#59678e",
         favourite: false
+      },
+      {
+        id: "anchor-art",
+        name: "Anchor Chart Studio",
+        description: "Turn teaching ideas into clear, beautiful anchor charts built for explanation, display and classroom memory.",
+        url: "https://6wyk5wz8rf-star.github.io/Anchor-Art/",
+        icon: "anchor-chart",
+        accent: "#6a7b59",
+        favourite: false
       }
     ];
 
@@ -1435,6 +1460,9 @@
       if (icon === "model") {
         return `<svg ${common}><rect x="6" y="9" width="36" height="12" rx="3"/><path d="M18 9v12M31 9v12"/><rect x="6" y="28" width="22" height="11" rx="3"/><circle cx="36.5" cy="33.5" r="5.5"/><path d="M9 15h6M22 15h6M35 15h4" opacity=".7"/></svg>`;
       }
+      if (icon === "anchor-chart") {
+        return `<svg ${common}><path d="M11 7.5h26a4 4 0 0 1 4 4v25a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4v-25a4 4 0 0 1 4-4Z"/><path d="M15 16h18M15 23h11M15 30h7"/><path d="m29 30 3.5-3.5L36 30l-3.5 3.5L29 30Z" opacity=".72"/></svg>`;
+      }
       return `<svg ${common}><path d="M7 10.5h11c4 0 6.5 2.5 6.5 6.4v23H14c-4.2 0-7-2.7-7-6.8V10.5Z"/><path d="M41 10.5h-10c-4 0-6.5 2.5-6.5 6.4v23H34c4.2 0 7-2.7 7-6.8V10.5Z"/><path d="M12 18h7M12 24h7M30 18h6M30 24h6" opacity=".7"/></svg>`;
     }
 
@@ -1451,19 +1479,24 @@
       if (app.icon === "model") {
         return `<svg class="motif" viewBox="0 0 220 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="20" y="24" width="180" height="45" rx="12"/><path d="M74 24v45M144 24v45"/><circle cx="46" cy="108" r="17"/><circle cx="109" cy="108" r="17"/><circle cx="174" cy="108" r="17"/><path d="M63 108h29M126 108h31" stroke-dasharray="5 6" opacity=".65"/><path d="M43 45h13M93 45h30M162 45h20" opacity=".55"/></svg>`;
       }
+      if (app.icon === "anchor-chart") {
+        return `<svg class="motif" viewBox="0 0 180 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M32 15h116a8 8 0 0 1 8 8v104a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8V23a8 8 0 0 1 8-8Z"/><path d="M45 38h72M45 51h48" stroke-width="5"/><path d="M45 76h90M45 91h68M45 106h78" opacity=".58"/><path d="m123 40 8 8 16-19"/><circle cx="134" cy="48" r="23" opacity=".22"/></svg>`;
+      }
       return `<svg class="motif" viewBox="0 0 220 145" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M28 24h55c17 0 27 10 27 27v72H58c-18 0-30-11-30-29V24Z"/><path d="M192 24h-55c-17 0-27 10-27 27v72h52c18 0 30-11 30-29V24Z"/><path d="M110 51v72M49 48h38M49 65h38M49 82h28M133 48h38M133 65h38M133 82h28" opacity=".58"/></svg>`;
     }
 
     function roomLabel(app) {
       if (app.id === "bsl") return "Guided practice";
       if (app.id === "studio") return "Model table";
-      return "Year 4 curriculum";
+      if (app.id === "maths-web") return "Year 4 curriculum";
+      return "Anchor art";
     }
 
     function buttonLabel(app) {
       if (app.id === "bsl") return "Open Companion";
       if (app.id === "studio") return "Open Studio";
-      return "Open Maths Web";
+      if (app.id === "maths-web") return "Open Maths Web";
+      return "Open Anchor Studio";
     }
 
     function countLabel(app) {
@@ -1515,7 +1548,7 @@
           <div class="empty-state">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="24" cy="24" r="18"/><path d="M24 14v10l7 4"/></svg>
             <h3>No recent rooms yet</h3>
-            <p>Open any of your three applications and it will appear here for a quick return.</p>
+            <p>Open any application and it will appear here for a quick return.</p>
             <button class="secondary-button" type="button" data-page-target="home">Choose a room</button>
           </div>`;
       } else {
